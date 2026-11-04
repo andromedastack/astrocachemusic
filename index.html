@@ -1,1 +1,516 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Astro Cache Music</title></head><body><h1>Astro Cache Music</h1><p>Coming soon.</p></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AstroCache</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="AstroCache — heavy bass music and dubstep. New music, shows, merch and sample packs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,400..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: observatory telemetry. Giant expanded wordmark over a live sub-bass scope, then a single column of instrument-panel sections. */
+:root {
+  --void: #090b13;      /* page ground, navy-black */
+  --hull: #11152a;      /* raised panels */
+  --line: #252b47;      /* rules and borders */
+  --star: #ebe8f4;      /* primary text */
+  --dim:  #8d92b2;      /* secondary text */
+  --flare: #ffad29;     /* amber accent: CTAs, signal */
+  --ion:  #72d4ff;      /* cold secondary, used sparingly */
+  --display: "Anybody", "Arial Black", Impact, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --s-1: 12px; --s0: 15px; --s1: 18px; --s2: 24px; --s3: 36px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--void); color: var(--star);
+  font-family: var(--body); font-size: var(--s0); line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--flare); outline-offset: 3px; border-radius: 2px; }
+.wrap {
+  max-width: 1180px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.label {
+  font-family: var(--mono); font-size: var(--s-1); letter-spacing: .14em;
+  text-transform: uppercase; color: var(--dim);
+}
+
+/* Starfield behind the whole page */
+#sky { position: fixed; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; pointer-events: none; }
+main, footer { position: relative; z-index: 1; }
+
+/* Header */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--void); }
+header.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: color-mix(in srgb, var(--void) 88%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+header.top .wrap { display: flex; align-items: center; gap: 24px; padding-block: 14px; }
+.mark {
+  font-family: var(--display); font-weight: 900; font-stretch: 140%;
+  font-size: 17px; letter-spacing: .02em; text-decoration: none; white-space: nowrap;
+}
+.mark span { color: var(--flare); }
+nav.links { display: flex; gap: 22px; margin-left: auto; flex-wrap: wrap; }
+nav.links a {
+  font-family: var(--mono); font-size: 13px; letter-spacing: .1em; text-transform: uppercase;
+  text-decoration: none; color: var(--dim); transition: color .15s;
+}
+nav.links a:hover { color: var(--star); }
+@media (max-width: 760px) { nav.links { display: none; } .top .btn { margin-left: auto; } }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--mono); font-size: 13px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
+  text-decoration: none; padding: 12px 18px; border: 1px solid var(--flare);
+  background: var(--flare); color: var(--void); cursor: pointer; transition: background .15s, color .15s;
+}
+.btn:hover { background: transparent; color: var(--flare); }
+.btn.ghost { background: transparent; color: var(--star); border-color: var(--line); }
+.btn.ghost:hover { border-color: var(--star); color: var(--star); }
+.btn.sm { padding: 8px 12px; font-size: 12px; }
+
+/* Hero */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero .wrap { position: relative; padding-block: clamp(48px, 9vw, 110px) clamp(40px, 6vw, 72px); }
+.coords { display: flex; gap: 22px; flex-wrap: wrap; margin-bottom: 22px; }
+.coords b { color: var(--ion); font-weight: 500; }
+h1.word {
+  margin: 0; font-family: var(--display); font-weight: 900; font-stretch: 125%;
+  font-size: clamp(60px, 17vw, 208px); line-height: .84; letter-spacing: -.01em;
+  text-transform: uppercase;
+}
+h1.word .hollow { color: transparent; -webkit-text-stroke: clamp(1.5px, .3vw, 3px) var(--star); display: block; }
+.hero-foot { display: flex; flex-wrap: wrap; gap: 28px 48px; align-items: flex-end; margin-top: 40px; }
+.now { max-width: 34ch; }
+.now .label { color: var(--flare); }
+.now h2 { margin: 6px 0 4px; font-family: var(--display); font-stretch: 110%; font-weight: 800; font-size: var(--s3); line-height: 1.05; text-wrap: balance; }
+.now p { margin: 0; color: var(--dim); }
+.ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* Sections */
+section.block { border-bottom: 1px solid var(--line); }
+section.block > .wrap { padding-block: clamp(56px, 8vw, 96px); }
+.head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; }
+.head h2 {
+  margin: 0; font-family: var(--display); font-weight: 900; font-stretch: 130%;
+  font-size: clamp(34px, 6vw, 64px); line-height: .95; text-transform: uppercase; text-wrap: balance;
+}
+.head a.more { font-family: var(--mono); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--flare); text-decoration: none; }
+.head a.more:hover { text-decoration: underline; text-underline-offset: 4px; }
+.tag {
+  display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  border: 1px dashed var(--dim); color: var(--dim); padding: 2px 6px; vertical-align: middle;
+}
+
+/* Releases */
+.releases { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 28px; }
+.rel { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.cover { aspect-ratio: 1; max-width: 100%; position: relative; overflow: hidden; border: 1px solid var(--line); }
+.cover canvas { width: 100%; height: 100%; display: block; }
+.cover .type { position: absolute; left: 10px; top: 10px; background: var(--void); padding: 3px 7px; }
+.rel h3 { margin: 0; font-family: var(--display); font-stretch: 110%; font-weight: 800; font-size: var(--s1); line-height: 1.15; }
+.rel .meta { display: flex; gap: 12px; color: var(--dim); font-family: var(--mono); font-size: 12px; }
+.plat { display: flex; flex-wrap: wrap; gap: 6px; }
+.plat a {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  text-decoration: none; border: 1px solid var(--line); padding: 5px 8px; color: var(--star);
+}
+.plat a:hover { border-color: var(--flare); color: var(--flare); }
+
+/* Shows */
+.shows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.show {
+  display: grid; grid-template-columns: 110px minmax(0,1fr) minmax(0,1fr) auto; gap: 20px; align-items: center;
+  padding-block: 20px; border-bottom: 1px solid var(--line);
+}
+.date { font-family: var(--mono); font-variant-numeric: tabular-nums; line-height: 1.2; }
+.date b { display: block; font-family: var(--display); font-stretch: 120%; font-weight: 900; font-size: 30px; color: var(--star); }
+.date span { color: var(--dim); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+.show .venue { font-weight: 600; font-size: var(--s1); }
+.show .city { color: var(--dim); }
+.show .bill { color: var(--dim); font-size: 13px; font-family: var(--mono); }
+@media (max-width: 700px) {
+  .show { grid-template-columns: 80px minmax(0,1fr); }
+  .show .where2 { grid-column: 2; }
+  .show .act { grid-column: 1 / -1; }
+  .date b { font-size: 24px; }
+}
+.empty { padding: 28px; border: 1px dashed var(--line); color: var(--dim); }
+
+/* Shop: merch + samples */
+.shop { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.item { background: var(--hull); border: 1px solid var(--line); display: flex; flex-direction: column; min-width: 0; text-decoration: none; transition: border-color .15s, transform .15s; }
+.item:hover { border-color: var(--flare); transform: translateY(-2px); }
+@media (prefers-reduced-motion: reduce) { .item:hover { transform: none; } }
+.item .art { aspect-ratio: 4/3; max-width: 100%; border-bottom: 1px solid var(--line); }
+.item .art canvas { width: 100%; height: 100%; display: block; }
+.item .body { padding: 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.item h3 { margin: 0; font-family: var(--display); font-stretch: 110%; font-weight: 800; font-size: var(--s1); line-height: 1.15; }
+.item p { margin: 0; color: var(--dim); font-size: 14px; }
+.spec { font-family: var(--mono); font-size: 12px; color: var(--ion); }
+.price { margin-top: auto; padding-top: 10px; display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.price b { font-size: 17px; }
+.price span { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--flare); }
+
+/* Connect */
+.connect { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 48px; }
+@media (max-width: 860px) { .connect { grid-template-columns: minmax(0,1fr); } }
+.socials { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.socials a {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding-block: 16px; border-bottom: 1px solid var(--line); text-decoration: none;
+}
+.socials .net { font-family: var(--display); font-stretch: 120%; font-weight: 800; font-size: 22px; text-transform: uppercase; }
+.socials .handle { font-family: var(--mono); font-size: 13px; color: var(--dim); overflow-wrap: anywhere; text-align: right; }
+.socials a:hover .net { color: var(--flare); }
+.panel { background: var(--hull); border: 1px solid var(--line); padding: 28px; display: flex; flex-direction: column; gap: 14px; }
+.panel h3 { margin: 0; font-family: var(--display); font-stretch: 120%; font-weight: 900; font-size: var(--s2); text-transform: uppercase; }
+.panel p { margin: 0; color: var(--dim); max-width: 46ch; }
+.panel + .panel { margin-top: 20px; }
+.email { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.email code { font-family: var(--mono); font-size: 15px; color: var(--star); user-select: all; overflow-wrap: anywhere; }
+
+footer .wrap { padding-block: 32px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+footer p { margin: 0; }
+</style>
+</head>
+<body>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top">ASTRO<span>CACHE</span></a>
+    <nav class="links" aria-label="Sections">
+      <a href="#music">Music</a><a href="#shows">Shows</a><a href="#merch">Merch</a><a href="#samples">Samples</a><a href="#connect">Connect</a>
+    </nav>
+    <a class="btn sm" id="alertsTop" href="#connect">Drop alerts</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-label="AstroCache">
+    <canvas id="scope" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="coords label">
+        <span>Heavy bass / dubstep</span>
+        <span>Sub <b>40 Hz</b></span>
+        <span>Tempo <b>140&ndash;150 BPM</b></span>
+      </div>
+      <h1 class="word">Astro<span class="hollow">Cache</span></h1>
+      <div class="hero-foot">
+        <div class="now">
+          <div class="label">Latest release</div>
+          <h2 id="latestTitle"></h2>
+          <p id="latestMeta"></p>
+        </div>
+        <div class="ctas">
+          <a class="btn" id="latestListen" href="#music" target="_blank" rel="noopener">Listen now</a>
+          <a class="btn ghost" href="#shows">See shows</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="music">
+    <div class="wrap">
+      <div class="head"><h2>Music</h2><a class="more" id="allMusic" href="#" target="_blank" rel="noopener">All releases &rarr;</a></div>
+      <div class="releases" id="releases"></div>
+    </div>
+  </section>
+
+  <section class="block" id="shows">
+    <div class="wrap">
+      <div class="head"><h2>Shows</h2><a class="more" id="bit" href="#" target="_blank" rel="noopener">Track on Bandsintown &rarr;</a></div>
+      <ul class="shows" id="showList"></ul>
+    </div>
+  </section>
+
+  <section class="block" id="merch">
+    <div class="wrap">
+      <div class="head"><h2>Merch</h2><a class="more" id="store" href="#" target="_blank" rel="noopener">Full store &rarr;</a></div>
+      <div class="shop" id="merchGrid"></div>
+    </div>
+  </section>
+
+  <section class="block" id="samples">
+    <div class="wrap">
+      <div class="head"><h2>Sample packs</h2><a class="more" id="packsLink" href="#" target="_blank" rel="noopener">All packs &rarr;</a></div>
+      <div class="shop" id="packGrid"></div>
+    </div>
+  </section>
+
+  <section class="block" id="connect">
+    <div class="wrap connect">
+      <div>
+        <div class="head"><h2>Connect</h2></div>
+        <ul class="socials" id="socials"></ul>
+      </div>
+      <div>
+        <div class="panel">
+          <div class="label">Drop alerts</div>
+          <h3>First to hear it</h3>
+          <p>Get a text or email when new tunes, packs and show dates land.</p>
+          <div><a class="btn" id="alerts" href="#" target="_blank" rel="noopener">Sign up for alerts</a></div>
+        </div>
+        <div class="panel">
+          <div class="label">Booking &amp; inquiries</div>
+          <h3>Book AstroCache</h3>
+          <div class="email"><code id="bookingEmail"></code><button class="btn ghost sm" id="copyBtn" type="button">Copy</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap label">
+    <p>&copy; <span id="yr"></span> AstroCache. All rights reserved.</p>
+    <p>astrocachemusic.com</p>
+  </div>
+</footer>
+
+<script>
+/* =====================================================================
+   EDIT EVERYTHING HERE. Replace the placeholder entries with your real
+   releases, shows, merch, packs and links. Remove `placeholder: true`
+   from an entry once it's real, and the dashed PLACEHOLDER tag goes away.
+   ===================================================================== */
+const SITE = {
+  bookingEmail: "booking@astrocachemusic.com",
+  alertsUrl: "https://laylo.com/",              // Laylo, Mailchimp, Linktree, etc.
+  storeUrl: "https://example-store.com",          // your Shopify / Fourthwall / Bandcamp merch
+  packsUrl: "https://example-store.com/samples",  // Gumroad / Splice / your store
+  bandsintownUrl: "https://www.bandsintown.com/",
+  allMusicUrl: "https://soundcloud.com/",
+
+  releases: [
+    { title: "Event Horizon", type: "Single", date: "2026-10-17", bpm: 150, hue: 32, placeholder: true,
+      links: { Spotify: "https://open.spotify.com/", SoundCloud: "https://soundcloud.com/", Beatport: "https://www.beatport.com/" } },
+    { title: "Dark Matter EP", type: "EP", date: "2026-06-05", bpm: 140, hue: 200, placeholder: true,
+      links: { Spotify: "https://open.spotify.com/", SoundCloud: "https://soundcloud.com/", Bandcamp: "https://bandcamp.com/" } },
+    { title: "Gravity Well (VIP)", type: "Free DL", date: "2026-03-20", bpm: 150, hue: 280, placeholder: true,
+      links: { SoundCloud: "https://soundcloud.com/", Download: "https://hypeddit.com/" } },
+    { title: "Redshift", type: "Single", date: "2025-12-12", bpm: 140, hue: 350, placeholder: true,
+      links: { Spotify: "https://open.spotify.com/", "Apple Music": "https://music.apple.com/" } }
+  ],
+
+  // Leave this array empty [] when you have no dates; the page shows a "no dates yet" message.
+  shows: [
+    { date: "2026-11-21", venue: "The Basement", city: "Calgary, AB", bill: "w/ support TBA", tickets: "https://www.bandsintown.com/", placeholder: true },
+    { date: "2026-12-06", venue: "Bass Coast Warehouse", city: "Edmonton, AB", bill: "Headline set", tickets: "https://www.bandsintown.com/", placeholder: true },
+    { date: "2027-01-17", venue: "Subsonic Club Night", city: "Vancouver, BC", bill: "Support", tickets: "https://www.bandsintown.com/", soldOut: true, placeholder: true }
+  ],
+
+  merch: [
+    { name: "Orbit Logo Tee", detail: "Heavyweight black tee, amber front print", price: "$35", hue: 32, url: "https://example-store.com", placeholder: true },
+    { name: "Event Horizon Hoodie", detail: "Oversized fit, back print", price: "$65", hue: 220, url: "https://example-store.com", placeholder: true },
+    { name: "Headbanger Bucket Hat", detail: "Embroidered, one size", price: "$30", hue: 280, url: "https://example-store.com", placeholder: true }
+  ],
+
+  packs: [
+    { name: "Cache Vol. 1: Heavy Dubstep", spec: "180 one-shots · 40 Serum presets · 24-bit WAV", detail: "Growls, screeches, tearouts and drums from the AstroCache sessions.", price: "$24", hue: 32, url: "https://example-store.com/samples", placeholder: true },
+    { name: "Sub Station: Riddim Toolkit", spec: "95 one-shots · 30 loops @ 150 BPM", detail: "Tight riddim basses, metallic hits and wobble loops.", price: "$18", hue: 190, url: "https://example-store.com/samples", placeholder: true },
+    { name: "Free Drum Cache", spec: "60 drum one-shots · 24-bit WAV", detail: "Punchy kicks and cracking snares, free for mailing list.", price: "Free", hue: 140, url: "https://example-store.com/samples", placeholder: true }
+  ],
+
+  socials: [
+    { net: "Instagram",  handle: "@astrocachemusic", url: "https://instagram.com/" },
+    { net: "TikTok",     handle: "@astrocachemusic", url: "https://tiktok.com/" },
+    { net: "SoundCloud", handle: "/astrocache",      url: "https://soundcloud.com/" },
+    { net: "Spotify",    handle: "AstroCache",       url: "https://open.spotify.com/" },
+    { net: "YouTube",    handle: "@astrocache",      url: "https://youtube.com/" },
+    { net: "Discord",    handle: "Join the server",  url: "https://discord.com/" }
+  ]
+};
+/* ===================== end of edit area ===================== */
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const ph = (o) => o.placeholder ? ' <span class="tag">Placeholder</span>' : '';
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const parse = (d) => { const [y,m,dd] = d.split("-").map(Number); return { y, m, d: dd }; };
+
+/* Generative art for covers / product cards (swap for real <img> later if you like) */
+function paintArt(canvas, hue, seed, mode) {
+  const r = canvas.getBoundingClientRect();
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const w = canvas.width = Math.max(1, Math.round(r.width * dpr));
+  const h = canvas.height = Math.max(1, Math.round(r.height * dpr));
+  const x = canvas.getContext("2d");
+  let s = seed * 9301 + 49297; const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+  x.fillStyle = `hsl(${hue} 45% 7%)`; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < 90; i++) { x.fillStyle = `hsla(${hue} 30% 90% / ${rnd() * .5})`; x.fillRect(rnd() * w, rnd() * h, dpr, dpr); }
+  const cx = w * (.35 + rnd() * .3), cy = h * (.4 + rnd() * .2), R = Math.min(w, h) * (.22 + rnd() * .1);
+  const g = x.createRadialGradient(cx, cy, R * .2, cx, cy, R * 2.2);
+  g.addColorStop(0, `hsla(${hue} 95% 60% / .55)`); g.addColorStop(1, `hsla(${hue} 95% 50% / 0)`);
+  x.fillStyle = g; x.fillRect(0, 0, w, h);
+  x.fillStyle = "#05060b"; x.beginPath(); x.arc(cx, cy, R, 0, Math.PI * 2); x.fill();
+  x.strokeStyle = `hsl(${hue} 95% 62%)`; x.lineWidth = 2 * dpr; x.beginPath();
+  x.ellipse(cx, cy, R * 1.7, R * .32, -.25, 0, Math.PI * 2); x.stroke();
+  if (mode === "wave") {
+    x.strokeStyle = `hsla(${hue} 95% 70% / .8)`; x.lineWidth = 1.5 * dpr; x.beginPath();
+    const base = h * .86, f = 3 + rnd() * 4;
+    for (let i = 0; i <= w; i += 2) { const t = i / w; x.lineTo(i, base + Math.sin(t * Math.PI * f) * h * .05 * Math.sin(t * Math.PI)); }
+    x.stroke();
+  }
+}
+
+function render() {
+  const L = SITE.releases[0];
+  if (L) {
+    const p = parse(L.date);
+    $("latestTitle").innerHTML = esc(L.title) + ph(L);
+    $("latestMeta").textContent = `${L.type} · ${MON[p.m - 1]} ${p.d}, ${p.y} · ${L.bpm} BPM`;
+    const first = Object.values(L.links)[0]; if (first) $("latestListen").href = first;
+  }
+  $("releases").innerHTML = SITE.releases.map((r, i) => {
+    const p = parse(r.date);
+    return `<article class="rel">
+      <div class="cover"><canvas data-hue="${r.hue}" data-seed="${i + 3}" data-mode="wave"></canvas><span class="type label">${esc(r.type)}</span></div>
+      <h3>${esc(r.title)}${ph(r)}</h3>
+      <div class="meta"><span>${MON[p.m - 1]} ${p.y}</span><span>${r.bpm} BPM</span></div>
+      <div class="plat">${Object.entries(r.links).map(([k, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(k)}</a>`).join("")}</div>
+    </article>`;
+  }).join("");
+
+  $("showList").innerHTML = SITE.shows.length ? SITE.shows.map(s => {
+    const p = parse(s.date);
+    return `<li class="show">
+      <div class="date"><b>${String(p.d).padStart(2, "0")}</b><span>${MON[p.m - 1]} ${p.y}</span></div>
+      <div><div class="venue">${esc(s.venue)}${ph(s)}</div><div class="city">${esc(s.city)}</div></div>
+      <div class="bill where2">${esc(s.bill || "")}</div>
+      <div class="act">${s.soldOut ? '<span class="btn ghost sm" aria-disabled="true">Sold out</span>' : `<a class="btn sm" href="${esc(s.tickets)}" target="_blank" rel="noopener">Tickets</a>`}</div>
+    </li>`;
+  }).join("") : `<li class="empty">No dates announced yet. Sign up for drop alerts to hear about shows first.</li>`;
+
+  const card = (o, i, kind) => `<a class="item" href="${esc(o.url)}" target="_blank" rel="noopener">
+      <div class="art"><canvas data-hue="${o.hue}" data-seed="${i + (kind === "pack" ? 20 : 10)}" data-mode="${kind === "pack" ? "wave" : ""}"></canvas></div>
+      <div class="body">
+        <h3>${esc(o.name)}${ph(o)}</h3>
+        ${o.spec ? `<div class="spec">${esc(o.spec)}</div>` : ""}
+        <p>${esc(o.detail)}</p>
+        <div class="price"><b>${esc(o.price)}</b><span>${kind === "pack" ? (o.price === "Free" ? "Download" : "Get pack") : "Shop"} &rarr;</span></div>
+      </div></a>`;
+  $("merchGrid").innerHTML = SITE.merch.map((o, i) => card(o, i, "merch")).join("");
+  $("packGrid").innerHTML = SITE.packs.map((o, i) => card(o, i, "pack")).join("");
+
+  $("socials").innerHTML = SITE.socials.map(s => `<li><a href="${esc(s.url)}" target="_blank" rel="noopener"><span class="net">${esc(s.net)}</span><span class="handle">${esc(s.handle)} &nearr;</span></a></li>`).join("");
+
+  $("store").href = SITE.storeUrl; $("packsLink").href = SITE.packsUrl;
+  $("bit").href = SITE.bandsintownUrl; $("allMusic").href = SITE.allMusicUrl;
+  $("alerts").href = SITE.alertsUrl;
+  $("bookingEmail").textContent = SITE.bookingEmail;
+  $("yr").textContent = new Date().getFullYear();
+}
+
+function paintAll() { document.querySelectorAll("canvas[data-hue]").forEach(c => paintArt(c, +c.dataset.hue, +c.dataset.seed, c.dataset.mode)); }
+
+/* Hero: a sub-bass oscilloscope with a wobble LFO, over a faint starfield */
+function scope() {
+  const c = $("scope"), x = c.getContext("2d");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let w, h, dpr, stars = [];
+  function size() {
+    const r = c.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1);
+    w = c.width = Math.round(r.width * dpr); h = c.height = Math.round(r.height * dpr);
+    let s = 7; const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+    stars = Array.from({ length: Math.round(w * h / (9000 * dpr)) }, () => [rnd() * w, rnd() * h, rnd()]);
+  }
+  function frame(t) {
+    x.clearRect(0, 0, w, h);
+    const mid = h * .62, lfo = 0.5 + 0.5 * Math.sin(t * 0.0042); // ~1/4-note wobble feel
+    const lines = [
+      { col: "rgba(255,173,41,.85)", amp: h * .11, f: 2.2, lw: 2 },
+      { col: "rgba(114,212,255,.35)", amp: h * .07, f: 5.5, lw: 1 }
+    ];
+    for (const L of lines) {
+      x.strokeStyle = L.col; x.lineWidth = L.lw * dpr; x.beginPath();
+      for (let i = 0; i <= w; i += 3) {
+        const u = i / w, env = Math.sin(u * Math.PI);
+        const y = mid + env * L.amp * (0.35 + lfo * .65) * Math.sin(u * Math.PI * 2 * L.f + t * 0.002)
+                + env * L.amp * .25 * Math.sin(u * Math.PI * 2 * L.f * 3.01 - t * 0.003) * lfo;
+        i ? x.lineTo(i, y) : x.moveTo(i, y);
+      }
+      x.stroke();
+    }
+    x.strokeStyle = "rgba(37,43,71,.9)"; x.lineWidth = dpr; x.beginPath(); x.moveTo(0, mid); x.lineTo(w, mid); x.stroke();
+    if (!reduce) requestAnimationFrame(frame);
+  }
+  size(); frame(1200);
+  window.addEventListener("resize", () => { size(); if (reduce) frame(1200); });
+}
+
+/* Page-wide starfield: three depth layers, a few tinted stars, faint nebula haze, gentle twinkle */
+function sky() {
+  const c = $("sky"), x = c.getContext("2d");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let w, h, dpr, stars = [], haze;
+  function size() {
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    w = c.width = Math.round(innerWidth * dpr); h = c.height = Math.round(innerHeight * dpr);
+    let s = 42; const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+    const n = Math.round(innerWidth * innerHeight / 2600);
+    stars = Array.from({ length: n }, () => {
+      const layer = rnd(); const tint = rnd();
+      return {
+        x: rnd() * w, y: rnd() * h,
+        r: (layer > .97 ? 1.6 : layer > .85 ? 1.1 : .6) * dpr,
+        a: layer > .85 ? .7 + rnd() * .3 : .2 + rnd() * .45,
+        col: tint > .93 ? "255,190,90" : tint > .86 ? "150,215,255" : "235,232,244",
+        sp: .0006 + rnd() * .0018, ph: rnd() * 6.28
+      };
+    });
+    // pre-render nebula haze once
+    haze = document.createElement("canvas"); haze.width = w; haze.height = h;
+    const hx = haze.getContext("2d");
+    [[.18, .22, 280, .09], [.82, .55, 210, .08], [.4, .9, 30, .05]].forEach(([px, py, hue, al]) => {
+      const R = Math.max(w, h) * .45, g = hx.createRadialGradient(px * w, py * h, 0, px * w, py * h, R);
+      g.addColorStop(0, `hsla(${hue} 80% 55% / ${al})`); g.addColorStop(1, `hsla(${hue} 80% 55% / 0)`);
+      hx.fillStyle = g; hx.fillRect(0, 0, w, h);
+    });
+  }
+  function frame(t) {
+    x.clearRect(0, 0, w, h);
+    x.drawImage(haze, 0, 0);
+    for (const s of stars) {
+      const tw = reduce ? 1 : .55 + .45 * Math.sin(t * s.sp + s.ph);
+      x.fillStyle = `rgba(${s.col},${s.a * tw})`;
+      x.beginPath(); x.arc(s.x, s.y, s.r, 0, 6.2832); x.fill();
+      if (s.r > 1.5 * dpr) { // small glint on the brightest stars
+        x.fillStyle = `rgba(${s.col},${.12 * tw})`; x.beginPath(); x.arc(s.x, s.y, s.r * 3.2, 0, 6.2832); x.fill();
+      }
+    }
+    if (!reduce) requestAnimationFrame(frame);
+  }
+  size(); frame(0);
+  let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { size(); if (reduce) frame(0); }, 120); });
+}
+
+$("copyBtn").addEventListener("click", () => {
+  const b = $("copyBtn"), done = () => { b.textContent = "Copied"; setTimeout(() => b.textContent = "Copy", 1600); };
+  const sel = () => { const r = document.createRange(); r.selectNodeContents($("bookingEmail")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "Selected"; };
+  try { navigator.clipboard.writeText(SITE.bookingEmail).then(done, sel); } catch (e) { sel(); }
+});
+
+render();
+paintAll();
+sky();
+scope();
+let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(paintAll, 150); });
+</script>
+</body>
+</html>
